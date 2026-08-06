@@ -51,10 +51,10 @@ The proposal makes excellent use of existing public data, ensuring it taps into 
 ## 🎯 The Challenge
 
 ### Project Summary
-The project involves using public financial documents (SEC filings, earnings call transcripts) to build a RAG-based system that answers financial questions with grounded citations. This addresses the challenge of extracting reliable insights from long, unstructured documents.
+In this project, you will use public financial documents, including SEC filings and earnings call transcripts, and retrieval-augmented generation (RAG), semantic search, reranking, and automated evaluation techniques to build a system that answers financial questions with grounded citations from source documents. This will help our company address the business problem of extracting reliable insights from long, unstructured documents quickly and accurately.
 
 ### Success Criteria
-Retrieval and answer quality metrics (top-k retrieval accuracy, answer relevance, citation correctness, groundedness/faithfulness), performance improvement over baseline retrieval approach.
+Top-k retrieval accuracy, answer relevance, citation correctness, and groundedness; must outperform keyword-search baseline.
 
 ### Project Milestones
 
@@ -62,9 +62,9 @@ Use these milestones to guide your work. Your team will create a **GitHub Projec
 
 | Month       | Milestone                   | Key Activities                                               |
 |-------------|-----------------------------|-------------------------------------------------------------|
-| **September**   | Data Understanding          | Explore dataset, handle missing values, document findings    |
-| **October**     | Model Development             | Train baseline model, experiment with approaches, iterate    |
-| **November**    | Evaluation & Presentation     | Finalize model, prepare presentation, document results       |
+| **September**   | [TBD]          | [TBD]     |
+| **October**     | [TBD]              | [TBD]     |
+| **November**    | [TBD]      | [TBD]        |
 
 > **Note for the team:** Please create a GitHub Projects board in this repository to break these milestones into weekly tasks. Go to the **Projects** tab → **New project** → Choose **Board** → Add columns for each month.
 
