@@ -38,6 +38,7 @@ The proposal makes excellent use of existing public data, ensuring it taps into 
 
 **Company / Org:** 7-11  
 **Challenge Advisor:** SaiSandeep Kantareddy   
+**AI Coach:** Srihari Kamath, srihari.kamath@breakthroughtech.org   
 **Program:** Break Through Tech AI Studio - Fall 2026
 
 ----
