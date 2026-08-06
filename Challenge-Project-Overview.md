@@ -55,7 +55,10 @@ The proposal makes excellent use of existing public data, ensuring it taps into 
 In this project, you will use public financial documents, including SEC filings and earnings call transcripts, and retrieval-augmented generation (RAG), semantic search, reranking, and automated evaluation techniques to build a system that answers financial questions with grounded citations from source documents. This will help our company address the business problem of extracting reliable insights from long, unstructured documents quickly and accurately.
 
 ### Success Criteria
-Top-k retrieval accuracy, answer relevance, citation correctness, and groundedness; must outperform keyword-search baseline.
+Success will be measured using retrieval and answer-quality metrics such as top-k retrieval accuracy, answer relevance, citation correctness, and groundedness/faithfulness to the source documents. A successful outcome by December would be a reproducible system that can answer financial questions from long documents with accurate source citations and clearly outperform a simple keyword-search or baseline retrieval approach.
+
+### Stretch Goals
+Stretch goals could include support for tables in filings, better handling of multi-document questions, comparison of open-source versus API-based models, lightweight abstention when evidence is weak, and a simple user interface for exploring answers and citations.
 
 ### Project Milestones
 
@@ -63,29 +66,21 @@ Use these milestones to guide your work. Your team will create a **GitHub Projec
 
 | Month | Milestone | Key Activities |
 | :--- | :--- | :--- |
-| September | Data Ingestion, Text Chunking & Embedding Indexing | • Ingest FinanceBench dataset and SEC 10-K/10-Q filings from EDGAR.<br>• Implement document parsing, financial table extraction, and semantic text chunking strategies.<br>• Generate vector embeddings and construct a vector database index (e.g., ChromaDB, FAISS, pgvector).<br>• Establish baseline evaluation metrics using naive vector search and vanilla LLM Q&A. |
-| October | RAG Pipeline Development, Advanced Retrieval & Grounding | • Implement hybrid search combining dense vector retrieval and sparse keyword (BM25) search.<br>• Integrate re-ranking models (e.g., Cross-Encoder) and query transformation techniques.<br>• Enforce strict grounding prompt constraints and citation attribution to eliminate hallucinations in financial responses.<br>• Evaluate retrieval accuracy and answer correctness against FinanceBench benchmarks using RAGAS/TruLens metrics. |
-| November / December | System Optimization, Interactive UI & Capstone Deliverables | • Optimize retrieval latency, token efficiency, and chunking over multi-page financial tables.<br>• Build an interactive Streamlit application enabling users to query financial reports, view exact cited source snippets, and inspect grounding scores.<br>• Finalize clean, reproducible GitHub repository, comprehensive technical documentation, and stakeholder presentation deck. |
-
-### Stretch Goals
-* **Multimodal Financial Table Parsing:** Integrate layout-aware parsing models (e.g., LlamaParse or Unstructured) to accurately parse complex nested financial tables, balance sheets, and footnote data.
-* **Financial Metric Calculation Engine:** Build an automated numerical verification module that validates derived financial calculations (e.g., YoY growth rates, operating margins) against raw source table values.
-* **Real-Time Grounding Guardrail Middleware:** Implement an automated interception layer that evaluates generated responses against retrieved context snippets and flags or blocks ungrounded claims before displaying output.
-> **Note for the team:** Please create a GitHub Projects board in this repository to break these milestones into weekly tasks. Go to the **Projects** tab → **New project** → Choose **Board** → Add columns for each month.
+| September | [TBD Title] | Define scope, select public datasets, preprocess documents, build a baseline retrieval pipeline, and establish evaluation criteria. |
+| October | [TBD Title] | Implement the full RAG pipeline with chunking, embedding-based retrieval, reranking, answer generation, and source citation. |
+| November | [TBD Title] | Improve answer quality through prompt and retrieval tuning, run comparative evaluations against the baseline, perform error analysis, and prepare final demo and documentation. |
 
 ---
 
 ## 📊 Dataset
 
-**Name and Source:** Public financial documents (SEC filings and earnings call transcripts) from SEC EDGAR and FinanceBench dataset  
+**Name and Source:** Public financial documents from SEC EDGAR and FinanceBench dataset  
 **Format:** Text and JSON  
 **Size:** under 1gb  
-**Location:** [Link to dataset or instructions for accessing it]
+**Location:** https://www.sec.gov/search-filings, https://huggingface.co/datasets/PatronusAI/financebench (Primary benchmark dataset: FinanceBench. Source documents can be supplemented with publicly available SEC filings from EDGAR)
 
 ### Key Details
-- Public financial documents (SEC filings and earnings call transcripts) from SEC EDGAR and FinanceBench dataset. Formats include Text and JSON.
-- No known limitations; the dataset requires minimal preprocessing.
-- [Link to data dictionary or documentation, if available]
+- [TBD]
 
 ---
 
