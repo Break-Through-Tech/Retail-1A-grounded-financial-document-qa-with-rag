@@ -37,7 +37,7 @@ The proposal makes excellent use of existing public data, ensuring it taps into 
 # Extracting Insight from Financial Documents Using RAG
 
 **Company / Org:** 7-11  
-**Challenge Advisor:** SaiSandeep Kantareddy
+**Challenge Advisor:** SaiSandeep Kantareddy   
 **Program:** Break Through Tech AI Studio - Fall 2026
 
 ----
