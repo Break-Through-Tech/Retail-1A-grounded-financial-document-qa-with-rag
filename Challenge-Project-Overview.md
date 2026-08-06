@@ -61,12 +61,16 @@ Top-k retrieval accuracy, answer relevance, citation correctness, and groundedne
 
 Use these milestones to guide your work. Your team will create a **GitHub Projects board** to track tasks within each milestone.
 
-| Month       | Milestone                   | Key Activities                                               |
-|-------------|-----------------------------|-------------------------------------------------------------|
-| **September**   | [TBD]          | [TBD]     |
-| **October**     | [TBD]              | [TBD]     |
-| **November**    | [TBD]      | [TBD]        |
+| Month | Milestone | Key Activities |
+| :--- | :--- | :--- |
+| September | Data Ingestion, Text Chunking & Embedding Indexing | • Ingest FinanceBench dataset and SEC 10-K/10-Q filings from EDGAR.<br>• Implement document parsing, financial table extraction, and semantic text chunking strategies.<br>• Generate vector embeddings and construct a vector database index (e.g., ChromaDB, FAISS, pgvector).<br>• Establish baseline evaluation metrics using naive vector search and vanilla LLM Q&A. |
+| October | RAG Pipeline Development, Advanced Retrieval & Grounding | • Implement hybrid search combining dense vector retrieval and sparse keyword (BM25) search.<br>• Integrate re-ranking models (e.g., Cross-Encoder) and query transformation techniques.<br>• Enforce strict grounding prompt constraints and citation attribution to eliminate hallucinations in financial responses.<br>• Evaluate retrieval accuracy and answer correctness against FinanceBench benchmarks using RAGAS/TruLens metrics. |
+| November / December | System Optimization, Interactive UI & Capstone Deliverables | • Optimize retrieval latency, token efficiency, and chunking over multi-page financial tables.<br>• Build an interactive Streamlit application enabling users to query financial reports, view exact cited source snippets, and inspect grounding scores.<br>• Finalize clean, reproducible GitHub repository, comprehensive technical documentation, and stakeholder presentation deck. |
 
+### Stretch Goals
+* **Multimodal Financial Table Parsing:** Integrate layout-aware parsing models (e.g., LlamaParse or Unstructured) to accurately parse complex nested financial tables, balance sheets, and footnote data.
+* **Financial Metric Calculation Engine:** Build an automated numerical verification module that validates derived financial calculations (e.g., YoY growth rates, operating margins) against raw source table values.
+* **Real-Time Grounding Guardrail Middleware:** Implement an automated interception layer that evaluates generated responses against retrieved context snippets and flags or blocks ungrounded claims before displaying output.
 > **Note for the team:** Please create a GitHub Projects board in this repository to break these milestones into weekly tasks. Go to the **Projects** tab → **New project** → Choose **Board** → Add columns for each month.
 
 ---
