@@ -38,8 +38,8 @@ The proposal makes excellent use of existing public data, ensuring it taps into 
 
 **Company / Org:** 7-11  
 **Challenge Advisor:** SaiSandeep Kantareddy, saisandeep.kantareddy@gmail.com
-
 **AI Coach:** Alexandra Ladyzhensky, alexandra.ladyzhensky@breakthroughtech.org
+
 **Program:** Break Through Tech AI Studio - Fall 2026
 
 ----
