@@ -18,6 +18,12 @@ This Challenge Project is an educational, public-data project. It does not use o
 ## 🎯 The Challenge
 
 ### Project Summary
+**Company / Org:** 7-11  
+**Challenge Advisor:** SaiSandeep Kantareddy, saisandeep.kantareddy@gmail.com
+
+**AI Coach:** Alexandra Ladyzhensky, alexandra.ladyzhensky@breakthroughtech.org
+
+**Program:** Break Through Tech AI Studio - Fall 2026
 
 Financial filings are long, dense, and difficult to search manually. In this project, the team will build a retrieval-augmented generation (RAG) system that answers questions about public financial documents and supports each answer with traceable evidence from the source.
 
