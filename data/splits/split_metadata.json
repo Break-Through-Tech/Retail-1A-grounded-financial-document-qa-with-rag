@@ -1,0 +1,153 @@
+{
+  "algorithm": "quota-constrained-greedy-group-split",
+  "algorithm_version": "1.0.0",
+  "dataset": {
+    "path": "data/financebench_merged.jsonl",
+    "rows": 150,
+    "sha256": "7a1c81789e0fd2f1c37057a7ec0097756d726b05e7228e68e57db8e18c54fd0b"
+  },
+  "diagnostics": {
+    "company_overlap": {
+      "companies_dev": 29,
+      "companies_in_both": 14,
+      "companies_owning_multiple_documents": 26,
+      "companies_test": 17,
+      "companies_total": 32,
+      "note": "diagnostic only; company is not a grouping constraint",
+      "overlapping_companies": [
+        "3M",
+        "Amcor",
+        "American Water Works",
+        "Block",
+        "Coca-Cola",
+        "Corning",
+        "Foot Locker",
+        "JPMorgan",
+        "Johnson & Johnson",
+        "MGM Resorts",
+        "Nike",
+        "PepsiCo",
+        "Pfizer",
+        "Walmart"
+      ],
+      "questions_from_multi_document_companies": 135
+    }
+  },
+  "distributions": {
+    "doc_type": {
+      "dev": {
+        "10k": 82,
+        "10q": 11,
+        "8k": 7,
+        "Earnings": 11
+      },
+      "population": {
+        "10k": 112,
+        "10q": 15,
+        "8k": 9,
+        "Earnings": 14
+      },
+      "test": {
+        "10k": 30,
+        "10q": 4,
+        "8k": 2,
+        "Earnings": 3
+      }
+    },
+    "gics_sector": {
+      "dev": {
+        "Communication Services": 4,
+        "Consumer Discretionary": 24,
+        "Consumer Staples": 17,
+        "Financials": 11,
+        "Health Care": 15,
+        "Industrials": 16,
+        "Information Technology": 18,
+        "Materials": 5,
+        "Utilities": 1
+      },
+      "population": {
+        "Communication Services": 9,
+        "Consumer Discretionary": 30,
+        "Consumer Staples": 23,
+        "Financials": 13,
+        "Health Care": 19,
+        "Industrials": 19,
+        "Information Technology": 22,
+        "Materials": 9,
+        "Utilities": 6
+      },
+      "test": {
+        "Communication Services": 5,
+        "Consumer Discretionary": 6,
+        "Consumer Staples": 6,
+        "Financials": 2,
+        "Health Care": 4,
+        "Industrials": 3,
+        "Information Technology": 4,
+        "Materials": 4,
+        "Utilities": 5
+      }
+    },
+    "question_type": {
+      "dev": {
+        "domain-relevant": 36,
+        "metrics-generated": 37,
+        "novel-generated": 38
+      },
+      "population": {
+        "domain-relevant": 50,
+        "metrics-generated": 50,
+        "novel-generated": 50
+      },
+      "test": {
+        "domain-relevant": 14,
+        "metrics-generated": 13,
+        "novel-generated": 12
+      }
+    }
+  },
+  "grouping_key": "doc_name",
+  "groups": {
+    "dev": 58,
+    "test": 26,
+    "total": 84
+  },
+  "invariants": {
+    "all_stratum_values_present_both_sides": true,
+    "grouping_key_overlap": 0,
+    "ids_disjoint": true,
+    "ids_partition_dataset": true,
+    "test_size_at_or_above_floor": true
+  },
+  "issue": "#6 Create Training and Testing Sets",
+  "min_test_size": 30,
+  "quotas": {
+    "doc_type": {
+      "10k": 30,
+      "10q": 4,
+      "8k": 2,
+      "Earnings": 4
+    },
+    "question_type": {
+      "domain-relevant": 14,
+      "metrics-generated": 13,
+      "novel-generated": 13
+    }
+  },
+  "schema_version": 1,
+  "seed": 42,
+  "sizes": {
+    "dev": 111,
+    "test": 39,
+    "total": 150
+  },
+  "split_kind": "two-way: development and frozen test (no separate train set; the September baseline is a keyword retriever and fits no parameters)",
+  "strata": [
+    "question_type",
+    "doc_type"
+  ],
+  "target_test_size": 40,
+  "tolerance_escalations": [],
+  "tolerance_used": 0
+}
