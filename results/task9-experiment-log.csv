@@ -1,0 +1,25 @@
+run,date,who,commit,split,questions,filings,chunking,size,overlap,header,filter,retriever,top_k,hit@1,hit@5,thit@5,mrr@10,evidence,note
+1,9/26/2026,Maanveer,none,personal,60,16,page,1 page,none,on,off,tfidf,10,0.033,0.2,0.233,0.096,1,"Task #4 split IDs not available yet, so all questions scored"
+2,9/26/2026,Maanveer,none,personal,60,16,page,1 page,none,on,on,tfidf,10,0.067,0.267,0.283,0.157,1,"Task #4 split IDs not available yet, so all questions scored"
+3,9/26/2026,Maanveer,none,personal,60,16,words,300,50,on,off,tfidf,10,0.033,0.183,0.167,0.097,0.967,"Task #4 split IDs not available yet, so all questions scored"
+4,9/26/2026,Maanveer,none,personal,60,16,words,300,50,on,on,tfidf,10,0.1,0.217,0.2,0.179,0.967,"Task #4 split IDs not available yet, so all questions scored"
+5,9/26/2026,Maanveer,none,personal,60,16,words,600,100,on,off,tfidf,10,0.033,0.167,0.2,0.096,1,"Task #4 split IDs not available yet, so all questions scored"
+6,9/26/2026,Maanveer,none,personal,60,16,words,600,100,on,on,tfidf,10,0.067,0.25,0.3,0.161,1,"Task #4 split IDs not available yet, so all questions scored"
+7,2026-09-26,ms04,205e4ae+dirty,none applied,60,16,page,1 page,none,off,off,tfidf,10,0.033,0.2,0.233,0.1,1.0,"header off, to test whether the context header helps"
+8,2026-09-26,ms04,205e4ae+dirty,none applied,60,16,page,1 page,none,off,on,tfidf,10,0.067,0.25,0.267,0.157,1.0,"header off, to test whether the context header helps"
+9,2026-09-26,ms04,205e4ae+dirty,none applied,60,16,words,300,50,off,off,tfidf,10,0.033,0.183,0.167,0.097,0.967,"header off, to test whether the context header helps"
+10,2026-09-26,ms04,205e4ae+dirty,none applied,60,16,words,300,50,off,on,tfidf,10,0.1,0.217,0.2,0.182,0.967,"header off, to test whether the context header helps"
+11,2026-09-26,ms04,205e4ae+dirty,none applied,60,16,words,600,100,off,off,tfidf,10,0.033,0.167,0.2,0.096,1.0,"header off, to test whether the context header helps"
+12,2026-09-26,ms04,205e4ae+dirty,none applied,60,16,words,600,100,off,on,tfidf,10,0.067,0.233,0.283,0.159,1.0,"header off, to test whether the context header helps"
+13,2026-09-26,ms04,205e4ae+dirty,none applied,60,16,page,1 page,none,removed,off,tfidf,10,0.033,0.2,0.233,0.1,1.0,"context header removed from chunker (runs 7-12 showed no benefit); Task #4 split IDs not available yet, so all questions scored"
+14,2026-09-26,ms04,205e4ae+dirty,none applied,60,16,page,1 page,none,removed,on,tfidf,10,0.067,0.25,0.267,0.157,1.0,"context header removed from chunker (runs 7-12 showed no benefit); Task #4 split IDs not available yet, so all questions scored"
+15,2026-09-26,ms04,205e4ae+dirty,none applied,60,16,words,300,50,removed,off,tfidf,10,0.033,0.183,0.167,0.097,0.967,"context header removed from chunker (runs 7-12 showed no benefit); Task #4 split IDs not available yet, so all questions scored"
+16,2026-09-26,ms04,205e4ae+dirty,none applied,60,16,words,300,50,removed,on,tfidf,10,0.1,0.217,0.2,0.182,0.967,"context header removed from chunker (runs 7-12 showed no benefit); Task #4 split IDs not available yet, so all questions scored"
+17,2026-09-26,ms04,205e4ae+dirty,none applied,60,16,words,600,100,removed,off,tfidf,10,0.033,0.167,0.2,0.096,1.0,"context header removed from chunker (runs 7-12 showed no benefit); Task #4 split IDs not available yet, so all questions scored"
+18,2026-09-26,ms04,205e4ae+dirty,none applied,60,16,words,600,100,removed,on,tfidf,10,0.067,0.233,0.283,0.159,1.0,"context header removed from chunker (runs 7-12 showed no benefit); Task #4 split IDs not available yet, so all questions scored"
+19,2026-10-10,ms04,205e4ae+dirty,dev,48,12,page,1 page,none,removed,off,tfidf,10,0.021,0.188,0.208,0.087,1.0,development questions only; frozen test IDs excluded
+20,2026-10-10,ms04,205e4ae+dirty,dev,48,12,page,1 page,none,removed,on,tfidf,10,0.021,0.208,0.208,0.113,1.0,development questions only; frozen test IDs excluded
+21,2026-10-10,ms04,205e4ae+dirty,dev,48,12,words,300,50,removed,off,tfidf,10,0.021,0.188,0.146,0.088,0.958,development questions only; frozen test IDs excluded
+22,2026-10-10,ms04,205e4ae+dirty,dev,48,12,words,300,50,removed,on,tfidf,10,0.062,0.188,0.188,0.144,0.958,development questions only; frozen test IDs excluded
+23,2026-10-10,ms04,205e4ae+dirty,dev,48,12,words,600,100,removed,off,tfidf,10,0.021,0.167,0.188,0.087,1.0,development questions only; frozen test IDs excluded
+24,2026-10-10,ms04,205e4ae+dirty,dev,48,12,words,600,100,removed,on,tfidf,10,0.021,0.208,0.25,0.123,1.0,development questions only; frozen test IDs excluded
