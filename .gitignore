@@ -1,4 +1,10 @@
 .venv/
+__pycache__/
+.ipynb_checkpoints/
+data/pdfs/
+data/processed/
+*Zone.Identifier
+notebooks/*.pdf
 
 __pycache__/
 *.py[cod]
