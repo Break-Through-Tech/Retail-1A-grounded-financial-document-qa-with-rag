@@ -5,3 +5,12 @@ data/pdfs/
 data/processed/
 *Zone.Identifier
 notebooks/*.pdf
+
+__pycache__/
+*.py[cod]
+
+.idea/
+
+.DS_Store
+
+.pytest_cache/
