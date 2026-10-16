@@ -23,3 +23,5 @@ run,date,who,commit,split,questions,filings,chunking,size,overlap,header,filter,
 22,2026-10-10,ms04,205e4ae+dirty,dev,48,12,words,300,50,removed,on,tfidf,10,0.062,0.188,0.188,0.144,0.958,development questions only; frozen test IDs excluded
 23,2026-10-10,ms04,205e4ae+dirty,dev,48,12,words,600,100,removed,off,tfidf,10,0.021,0.167,0.188,0.087,1.0,development questions only; frozen test IDs excluded
 24,2026-10-10,ms04,205e4ae+dirty,dev,48,12,words,600,100,removed,on,tfidf,10,0.021,0.208,0.25,0.123,1.0,development questions only; frozen test IDs excluded
+25,2026-10-16,ms04,38f1954+dirty,dev,48,12,page,1 page,none,removed,off,bm25,10,0.188,0.333,0.354,0.243,1.0,task3 search test; development questions only
+26,2026-10-16,ms04,38f1954+dirty,dev,48,12,page,1 page,none,removed,on,bm25,10,0.229,0.5,0.562,0.322,1.0,task3 search test; development questions only

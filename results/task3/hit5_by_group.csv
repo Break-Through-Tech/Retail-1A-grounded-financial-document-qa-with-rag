@@ -1,0 +1,12 @@
+group,value,questions,tfidf filter off,tfidf filter on,bm25 filter off,bm25 filter on
+question_type,domain-relevant,19,0.053,0.053,0.211,0.421
+question_type,novel-generated,27,0.296,0.333,0.444,0.556
+question_type,metrics-generated,2,0.0,0.0,0.0,0.5
+reasoning,Logical reasoning (based on numerical reasoning),5,0.0,0.0,0.0,0.2
+reasoning,Information extraction,10,0.1,0.1,0.4,0.6
+reasoning,none given,27,0.296,0.333,0.444,0.556
+reasoning,Numerical reasoning,6,0.0,0.0,0.0,0.333
+doc_type,10q,8,0.125,0.125,0.5,0.625
+doc_type,Earnings,9,0.222,0.333,0.222,0.444
+doc_type,10k,26,0.077,0.077,0.192,0.385
+doc_type,8k,5,0.8,0.8,1.0,1.0
