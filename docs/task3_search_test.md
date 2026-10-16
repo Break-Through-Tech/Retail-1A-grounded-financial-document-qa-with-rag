@@ -63,6 +63,21 @@ The full table, with all four setups, is in `results/task3/hit5_by_group.csv`.
 
 This is the same wording-mismatch problem from Task #5. Dense retrieval (Tasks #4 and #5) is meant to fix exactly this kind of miss.
 
+## Rechecking the Task #5 chunking choice with BM25
+
+Task #5 picked page chunks using TF-IDF only. Because chunk size and retriever affect each other, we reran all three chunk types with BM25 (`src/bm25_chunking_check.py`).
+
+| Chunking | Filter | Hit@1 | Hit@5 | Text Hit@5 | MRR@10 | Run |
+|---|---|---|---|---|---|---|
+| Page | off | 0.188 | 0.333 | 0.354 | 0.243 | 25 |
+| Page | on | 0.229 | 0.500 | 0.562 | 0.322 | 26 |
+| 300 / 50 | off | 0.125 | 0.333 | 0.271 | 0.212 | 27 |
+| 300 / 50 | on | 0.167 | 0.438 | 0.354 | 0.285 | 28 |
+| 600 / 100 | off | 0.188 | 0.354 | 0.375 | 0.241 | 29 |
+| 600 / 100 | on | 0.229 | 0.479 | 0.521 | 0.314 | 30 |
+
+Page chunks are still the best, or tied for best, on every measure, so the Task #5 choice holds. Page and 600-word chunks are one question apart, which is inside the noise. 300-word chunks are a little worse.
+
 ## Limitations
 
 - At 48 questions, one question is worth about 2 points. Several groups are tiny, with only 2 metrics-generated questions and 5 8-Ks, so treat those rows as hints, not results.
@@ -75,4 +90,5 @@ This is the same wording-mismatch problem from Task #5. Dense retrieval (Tasks #
 - `results/task3/dataset_overview.csv`: the Part 1 counts.
 - `results/task3/per_question.csv`: one row per question per setup, with hit or miss.
 - `results/task3/hit5_by_group.csv`: Hit@5 by kind of question.
-- `results/task9-experiment-log.csv`: runs 25 and 26 are BM25.
+- `src/bm25_chunking_check.py`: the BM25 chunking recheck.
+- `results/task9-experiment-log.csv`: runs 25 to 30 are BM25.
