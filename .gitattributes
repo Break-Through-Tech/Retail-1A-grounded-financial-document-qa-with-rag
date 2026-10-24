@@ -1,0 +1,2 @@
+# Keep data files byte-for-byte identical on every OS (their SHA-256 is checked).
+data/** -text
