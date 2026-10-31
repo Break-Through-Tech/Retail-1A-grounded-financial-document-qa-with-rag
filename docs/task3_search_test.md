@@ -4,6 +4,8 @@ Maanveer Singh and Kanishka | Retail 1A | October 16, 2026
 
 Only development questions are used here. The frozen test questions are never read.
 
+Updated October 31: the corpus now holds development filings only (12 filings, 1,610 pages). The 4 test filings that were in it before are gone, and every number below was rerun on the new corpus.
+
 To rerun: `python -m src.task3_search_test` from the repository root. Add `--log` to also write the BM25 runs to the Task #9 log. It needs `data/processed/chunks_page.jsonl`, which comes from `src/extract_text.py` and then `src/chunk.py`.
 
 ## Part 1: What the dev questions look like
@@ -31,18 +33,20 @@ The test uses the 48 dev questions whose filing we have downloaded, covering 12 
 
 | Retriever | Filter | Hit@1 | Hit@5 | Text Hit@5 | MRR@10 |
 |---|---|---|---|---|---|
-| TF-IDF | off | 0.021 | 0.188 | 0.208 | 0.087 |
-| TF-IDF | on | 0.021 | 0.208 | 0.208 | 0.113 |
-| BM25 | off | 0.188 | 0.333 | 0.354 | 0.243 |
-| BM25 | on | 0.229 | 0.500 | 0.562 | 0.322 |
+| TF-IDF | off | 0.021 | 0.167 | 0.188 | 0.094 |
+| TF-IDF | on | 0.021 | 0.250 | 0.271 | 0.128 |
+| BM25 | off | 0.188 | 0.354 | 0.396 | 0.251 |
+| BM25 | on | 0.229 | 0.479 | 0.542 | 0.322 |
 
-BM25 with the filter is the best setup, finding the right page in the top 5 for half the questions. The TF-IDF numbers match runs 19 and 20 in the Task #9 log. The BM25 runs are logged as runs 25 and 26.
+BM25 with the filter is the best setup, finding the right page in the top 5 for about half the questions. The TF-IDF runs are 31 and 32 in the Task #9 log, and the BM25 runs are 37 and 38.
+
+Compared with the old corpus, which still had the 4 test filings, the changes are small. TF-IDF with the filter gained 2 questions. BM25 with the filter lost 1. BM25 scores each word by how rare it is across the whole corpus, so removing filings shifts the scores a little, even for pages that stayed. A change of 1 or 2 questions is inside the noise.
 
 ### Hit@5 by kind of question (BM25, filter on)
 
 | Kind | Questions | Hit@5 |
 |---|---|---|
-| novel-generated | 27 | 0.556 |
+| novel-generated | 27 | 0.519 |
 | domain-relevant | 19 | 0.421 |
 | metrics-generated | 2 | 0.500 |
 | Information extraction | 10 | 0.600 |
@@ -50,7 +54,7 @@ BM25 with the filter is the best setup, finding the right page in the top 5 for 
 | Logical reasoning | 5 | 0.200 |
 | 8-K | 5 | 1.000 |
 | 10-Q | 8 | 0.625 |
-| Earnings release | 9 | 0.444 |
+| Earnings release | 9 | 0.333 |
 | 10-K | 26 | 0.385 |
 
 The full table, with all four setups, is in `results/task3/hit5_by_group.csv`.
@@ -72,8 +76,8 @@ Only 5 of our 48 questions have evidence on more than one page.
 | Retriever | Filter | Hit@5 (any page) | all@5 (every page) |
 |---|---|---|---|
 | TF-IDF | off | 0.0 | 0.0 |
-| TF-IDF | on | 0.2 | 0.0 |
-| BM25 | off | 0.0 | 0.0 |
+| TF-IDF | on | 0.4 | 0.0 |
+| BM25 | off | 0.2 | 0.0 |
 | BM25 | on | 0.4 | 0.0 |
 
 No setup found all the pages for any of these 5 questions. BM25 with the filter found one page for 2 of them, which Hit@5 counts as a hit, but the model would still be missing numbers. Five questions is very few, but it backs up Kanishka's point that Hit@5 overstates search on multi-page questions. Details are in `results/task3/multi_page_any_vs_all.csv`.
@@ -84,20 +88,20 @@ Task #5 picked page chunks using TF-IDF only. Because chunk size and retriever a
 
 | Chunking | Filter | Hit@1 | Hit@5 | Text Hit@5 | MRR@10 | Run |
 |---|---|---|---|---|---|---|
-| Page | off | 0.188 | 0.333 | 0.354 | 0.243 | 25 |
-| Page | on | 0.229 | 0.500 | 0.562 | 0.322 | 26 |
-| 300 / 50 | off | 0.125 | 0.333 | 0.271 | 0.212 | 27 |
-| 300 / 50 | on | 0.167 | 0.438 | 0.354 | 0.285 | 28 |
-| 600 / 100 | off | 0.188 | 0.354 | 0.375 | 0.241 | 29 |
-| 600 / 100 | on | 0.229 | 0.479 | 0.521 | 0.314 | 30 |
+| Page | off | 0.188 | 0.354 | 0.396 | 0.251 | 37 |
+| Page | on | 0.229 | 0.479 | 0.542 | 0.322 | 38 |
+| 300 / 50 | off | 0.125 | 0.354 | 0.292 | 0.218 | 39 |
+| 300 / 50 | on | 0.167 | 0.438 | 0.354 | 0.286 | 40 |
+| 600 / 100 | off | 0.188 | 0.354 | 0.375 | 0.250 | 41 |
+| 600 / 100 | on | 0.229 | 0.479 | 0.521 | 0.316 | 42 |
 
-Page chunks are still the best, or tied for best, on every measure, so the Task #5 choice holds. Page and 600-word chunks are one question apart, which is inside the noise. 300-word chunks are a little worse.
+Page chunks are the best, or tied for best, on every measure, so the Task #5 choice holds. Page and 600-word chunks tie on Hit@5. 300-word chunks are a little worse.
 
 ## Limitations
 
 - At 48 questions, one question is worth about 2 points. Several groups are tiny, with only 2 metrics-generated questions and 5 8-Ks, so treat those rows as hints, not results.
 - For novel-generated questions the dataset gives no reasoning label, so the "none given" reasoning row is the same 27 questions.
-- The corpus still includes the 4 downloaded test filings. Only their questions are left out, and extra pages make search harder, not easier.
+- Only 12 of the 58 dev filings are downloaded, so the corpus is a small part of the final one.
 
 ## Files
 
@@ -107,4 +111,4 @@ Page chunks are still the best, or tied for best, on every measure, so the Task 
 - `results/task3/hit5_by_group.csv`: Hit@5 by kind of question.
 - `results/task3/multi_page_any_vs_all.csv`: any page vs all pages, for multi-page questions.
 - `src/bm25_chunking_check.py`: the BM25 chunking recheck.
-- `results/task9-experiment-log.csv`: runs 25 to 30 are BM25.
+- `results/task9-experiment-log.csv`: runs 31 to 42 are on the dev-filings-only corpus. Runs 25 to 30 are the same tests on the old corpus.

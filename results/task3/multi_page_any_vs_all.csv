@@ -1,5 +1,5 @@
 retriever,filter,questions,hit@5,all@5
 tfidf,off,5,0.0,0.0
-tfidf,on,5,0.2,0.0
-bm25,off,5,0.0,0.0
+tfidf,on,5,0.4,0.0
+bm25,off,5,0.2,0.0
 bm25,on,5,0.4,0.0
