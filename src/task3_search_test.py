@@ -5,12 +5,17 @@ Part 2 runs TF-IDF and BM25 over page chunks for the dev questions whose filing
 we have downloaded, then breaks Hit@5 down by kind of question, to see which
 questions search does well and badly on.
 
+Hit@5 counts a question as found if ANY gold page is in the top 5. For questions
+whose evidence spans several pages, all@5 also asks whether ALL of them are.
+
 The frozen test questions are never read.
 
-Usage: python -m src.task3_search_test     (from the repository root)
+Usage: python -m src.task3_search_test          (from the repository root)
+       python -m src.task3_search_test --log    (also add the BM25 runs to the Task #9 log)
 """
 
 import json
+import sys
 from datetime import date
 
 import numpy as np
@@ -106,6 +111,8 @@ def search_test():
                 gold = [tokens(e["evidence_text"]) for e in q["evidence"]]
                 text_hit = any(len(g & chunk_tokens[i]) / len(g) >= COVERAGE
                                for g in gold if g for i in top[:5])
+                gold_pages = {(e["doc_name"], e["evidence_page_num"]) for e in q["evidence"]}
+                top5_pages = {(r["doc_name"], r["evidence_page_num"]) for r in results[:5]}
 
                 rows.append({
                     "financebench_id": q["financebench_id"],
@@ -115,9 +122,11 @@ def search_test():
                     "reasoning": short_reasoning(q["question_reasoning"]),
                     "doc_type": q["doc_type"],
                     "doc_name": q["doc_name"],
+                    "gold_pages": len(gold_pages),
                     "hit@1": hit_at_k(results, q["evidence"], 1),
                     "hit@5": hit_at_k(results, q["evidence"], 5),
                     "thit@5": int(text_hit),
+                    "all@5": int(gold_pages <= top5_pages),
                     "mrr@10": round(reciprocal_rank_at_k(results, q["evidence"], TOP_K), 3),
                     "question": q["question"],
                 })
@@ -130,6 +139,14 @@ def search_test():
     overall = per_q.groupby(["retriever", "filter"], sort=False)[metrics].mean().round(3)
     print(f"\n{len(questions)} dev questions over {n_filings} filings\n")
     print(overall.to_string())
+
+    # questions needing several pages: any gold page found vs all of them found
+    multi = per_q[per_q.gold_pages > 1]
+    any_vs_all = multi.groupby(["retriever", "filter"], sort=False)[["hit@5", "all@5"]].mean().round(3)
+    any_vs_all.insert(0, "questions", multi.groupby(["retriever", "filter"], sort=False).size())
+    any_vs_all.to_csv(OUT / "multi_page_any_vs_all.csv")
+    print("\nQuestions with evidence on several pages: any page vs all pages in top 5\n")
+    print(any_vs_all.to_string())
 
     # Hit@5 by kind of question: the "does well / does badly" table
     one_setup = per_q[(per_q.retriever == "tfidf") & (per_q["filter"] == "off")]
@@ -146,7 +163,8 @@ def search_test():
     print("\nHit@5 by kind of question\n")
     print(by_group.to_string(index=False))
 
-    log_bm25_runs(overall, len(questions), n_filings, ceiling(CHUNKS, questions))
+    if "--log" in sys.argv:
+        log_bm25_runs(overall, len(questions), n_filings, ceiling(CHUNKS, questions))
 
 
 def log_bm25_runs(overall, n_questions, n_filings, cap):

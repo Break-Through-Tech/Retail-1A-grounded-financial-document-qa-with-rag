@@ -4,7 +4,7 @@ Maanveer Singh and Kanishka | Retail 1A | October 16, 2026
 
 Only development questions are used here. The frozen test questions are never read.
 
-To rerun: `python -m src.task3_search_test` from the repository root. It needs `data/processed/chunks_page.jsonl`, which comes from `src/extract_text.py` and then `src/chunk.py`.
+To rerun: `python -m src.task3_search_test` from the repository root. Add `--log` to also write the BM25 runs to the Task #9 log. It needs `data/processed/chunks_page.jsonl`, which comes from `src/extract_text.py` and then `src/chunk.py`.
 
 ## Part 1: What the dev questions look like
 
@@ -63,6 +63,21 @@ The full table, with all four setups, is in `results/task3/hit5_by_group.csv`.
 
 This is the same wording-mismatch problem from Task #5. Dense retrieval (Tasks #4 and #5) is meant to fix exactly this kind of miss.
 
+## Questions that need several pages
+
+Kanishka pointed out that Hit@5 counts a question as found if any one gold page is in the top 5, even when the answer needs several pages. So we added all@5, which asks whether every gold page is in the top 5. For single-page questions, the two are the same.
+
+Only 5 of our 48 questions have evidence on more than one page.
+
+| Retriever | Filter | Hit@5 (any page) | all@5 (every page) |
+|---|---|---|---|
+| TF-IDF | off | 0.0 | 0.0 |
+| TF-IDF | on | 0.2 | 0.0 |
+| BM25 | off | 0.0 | 0.0 |
+| BM25 | on | 0.4 | 0.0 |
+
+No setup found all the pages for any of these 5 questions. BM25 with the filter found one page for 2 of them, which Hit@5 counts as a hit, but the model would still be missing numbers. Five questions is very few, but it backs up Kanishka's point that Hit@5 overstates search on multi-page questions. Details are in `results/task3/multi_page_any_vs_all.csv`.
+
 ## Rechecking the Task #5 chunking choice with BM25
 
 Task #5 picked page chunks using TF-IDF only. Because chunk size and retriever affect each other, we reran all three chunk types with BM25 (`src/bm25_chunking_check.py`).
@@ -90,5 +105,6 @@ Page chunks are still the best, or tied for best, on every measure, so the Task 
 - `results/task3/dataset_overview.csv`: the Part 1 counts.
 - `results/task3/per_question.csv`: one row per question per setup, with hit or miss.
 - `results/task3/hit5_by_group.csv`: Hit@5 by kind of question.
+- `results/task3/multi_page_any_vs_all.csv`: any page vs all pages, for multi-page questions.
 - `src/bm25_chunking_check.py`: the BM25 chunking recheck.
 - `results/task9-experiment-log.csv`: runs 25 to 30 are BM25.
