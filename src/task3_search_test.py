@@ -172,7 +172,7 @@ def log_bm25_runs(overall, n_questions, n_filings, cap):
     run = next_run_number()
     who = shell(["git", "config", "user.name"])
     commit = shell(["git", "rev-parse", "--short", "HEAD"])
-    dirty = shell(["git", "status", "--porcelain"]) != ""
+    dirty = shell(["git", "status", "--porcelain", "--untracked-files=no"]) != ""
     for use_filter in ["off", "on"]:
         log_run({
             "run": run, "date": date.today().isoformat(), "who": who,
@@ -182,7 +182,7 @@ def log_bm25_runs(overall, n_questions, n_filings, cap):
             "header": "removed", "filter": use_filter,
             "retriever": "bm25", "top_k": TOP_K,
             **overall.loc[("bm25", use_filter)].to_dict(), "ceiling": cap,
-            "note": "task3 search test; development questions only",
+            "note": "task3 search test; dev questions; dev-filings-only corpus",
         })
         run += 1
 

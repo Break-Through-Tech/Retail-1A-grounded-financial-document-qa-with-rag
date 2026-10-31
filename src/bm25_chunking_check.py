@@ -66,7 +66,7 @@ def main():
                 "header": "removed", "filter": "on" if use_filter else "off",
                 "retriever": "bm25", "top_k": TOP_K,
                 **scores, "ceiling": cap,
-                "note": "bm25 chunking recheck; development questions only",
+                "note": "bm25 chunking recheck; dev questions; dev-filings-only corpus",
             })
             print(f"run {run}: {tag}, filter={'on' if use_filter else 'off'}", scores)
             run += 1

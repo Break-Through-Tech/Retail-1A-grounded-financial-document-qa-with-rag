@@ -147,7 +147,7 @@ SETTINGS = [
     ("w300", "words", 300, 50),
     ("w600", "words", 600, 100),
 ]
-NOTE = "development questions only; frozen test IDs excluded"
+NOTE = "dev questions; dev-filings-only corpus"
 
 
 def dev_questions():
@@ -169,7 +169,7 @@ def main():
     run = next_run_number()
     who = shell(["git", "config", "user.name"])
     commit = shell(["git", "rev-parse", "--short", "HEAD"])
-    dirty = shell(["git", "status", "--porcelain"]) != ""
+    dirty = shell(["git", "status", "--porcelain", "--untracked-files=no"]) != ""
 
     for tag, strategy, size, overlap in SETTINGS:
         cap = ceiling(f"chunks_{tag}.jsonl", questions)
