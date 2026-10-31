@@ -6,6 +6,9 @@ Strategies:
   page            one chunk per page
   words           fixed-size word windows inside each page, with overlap
 
+Only development filings are chunked, so the dev corpus never holds a test filing.
+The chunk format is described in docs/chunk_format.md.
+
 Usage: python src/chunk.py            (writes data/processed/chunks_page.jsonl etc.)
 """
 
@@ -17,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PAGES = ROOT / "data" / "processed" / "pages.jsonl"
 OUT_DIR = ROOT / "data" / "processed"
 DATASET = ROOT / "data" / "financebench_merged.jsonl"
+DEV_IDS = ROOT / "data" / "splits" / "dev_ids.txt"
 
 # Repeated page furniture that adds noise to every chunk.
 JUNK = [
@@ -57,6 +61,16 @@ def doc_metadata():
             "doc_link": r["doc_link"],
         }
     return meta
+
+
+def dev_filings():
+    """Names of the filings that development questions are about.
+
+    Only dev_ids.txt is read. The frozen test IDs are never opened.
+    """
+    dev = set(DEV_IDS.read_text().split())
+    return {r["doc_name"] for r in map(json.loads, DATASET.open())
+            if r["financebench_id"] in dev}
 
 
 def load_pages():
@@ -106,7 +120,9 @@ def chunk_docs(docs, strategy="page", size=300, overlap=50):
 
 
 def main():
-    docs = load_pages()
+    dev = dev_filings()
+    docs = {name: pages for name, pages in load_pages().items() if name in dev}
+    print(f"chunking {len(docs)} dev filings")
     for tag, kw in [
         ("page", dict(strategy="page")),
         ("w300", dict(strategy="words", size=300, overlap=50)),

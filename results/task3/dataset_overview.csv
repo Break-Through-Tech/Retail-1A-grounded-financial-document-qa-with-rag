@@ -1,0 +1,20 @@
+group,value,questions
+total,questions,111
+total,companies,29
+total,filings,58
+evidence words,median,196
+evidence words,max,717
+question_type,novel-generated,38
+question_type,metrics-generated,37
+question_type,domain-relevant,36
+reasoning,Numerical reasoning,39
+reasoning,none given,38
+reasoning,Information extraction,25
+reasoning,Logical reasoning (based on numerical reasoning),9
+doc_type,10k,82
+doc_type,10q,11
+doc_type,Earnings,11
+doc_type,8k,7
+passages,1,85
+passages,2,23
+passages,3,3
