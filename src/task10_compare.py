@@ -111,7 +111,7 @@ class Hybrid:
         self.depth = depth
 
     def retrieve(self, query, k):
-        from src.rerank import rrf_fuse
+        from src.retrieval.rerank import rrf_fuse
         lists = [list(p.retrieve(query, self.depth)) for p in self.parts]
         return rrf_fuse([l for l in lists if l])[:k]
 
