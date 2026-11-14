@@ -1,0 +1,4 @@
+run,stage,status,date,who,commit,split,questions,filings,chunking,size,overlap,filter,retriever,top_k,model,prompt,hit@1,hit@5,mrr@10,gold_page_retrieved,gold_page_cited,quotes_on_page,answered,abstained,correct_by_hand,partly_correct_by_hand,wrong_or_abstained_by_hand,latency_s,note
+1,A search only,done,2026-11-13,Benita,20e264d,dev,111,58,page,1 page,none,on,bm25,10,none,n/a,0.117,0.234,0.176,,,,,,,,,4.1,"BM25 + company/year filter, 58 dev filings"
+2,A search only,done,2026-11-13,Benita,20e264d,dev,111,58,words,300,50,on,bm25,10,none,n/a,0.117,0.243,0.182,,,,,,,,,7.3,"BM25 + company/year filter, 58 dev filings"
+3,A search only,done,2026-11-13,Benita,20e264d,dev,111,58,words,600,100,on,bm25,10,none,n/a,0.108,0.225,0.175,,,,,,,,,5.2,"BM25 + company/year filter, 58 dev filings"
