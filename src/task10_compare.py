@@ -141,7 +141,7 @@ def build_retriever(kind, chunks, args):
         return Hybrid([bm25, dense], depth=args.candidate_k), \
             {"model": f"{args.model} + bm25 (RRF)"}, [bm25, dense]
 
-    from src.rerank import CrossEncoderScorer, RetrieveAndRerank
+    from src.retrieval.rerank import CrossEncoderScorer, RetrieveAndRerank
     if not (args.rerank_model and args.rerank_revision):
         raise SystemExit("rerank needs --rerank-model and --rerank-revision")
     scorer = CrossEncoderScorer.load(
