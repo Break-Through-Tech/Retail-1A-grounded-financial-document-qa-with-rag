@@ -55,9 +55,9 @@ SYSTEM_PROMPT = """You answer questions about company financial filings.
 Use ONLY the numbered sources in the user's message. Never use outside knowledge.
 
 Rules:
-1. For every source you rely on, give its number and copy one short exact quote from it (a sentence or a table row).
-2. If the question needs a calculation, write each step with the numbers you used in "calculation_steps".
-3. Put the final answer in "answer", with units (for example "$1,577 million" or "24.5%").
+1. For every source you rely on, give its number and copy one short exact quote from it (a sentence or a table row). Copy the words exactly as they appear. Never change, round or shorten a number inside a quote.
+2. If the question needs a calculation, write each step with the numbers you used in "calculation_steps". Quote every number you use in a calculation. Read the whole table row or sentence before you choose a figure.
+3. Answer the question that was asked, in one or two full sentences. For a yes/no question, begin with "Yes" or "No". For a "which" or "who" question, name the item first. For "how much" or "what percent", give the number with its unit (for example "$1,577 million" or "24.5%"). Add a short reason only when it helps. Never reply with only a number unless the question asks for a single number.
 4. If the sources do not contain what you need, set "abstained" to true, "answer" to "" and "citations" to [].
 
 Reply with JSON only, in exactly this form:
@@ -276,6 +276,8 @@ def to_response(financebench_id: str, meta: dict, retrieved: list[tuple[dict, fl
     steps = [str(s) for s in (reply.get("calculation_steps") or []) if str(s).strip()]
     answer = reply.get("answer")
     abstained = reply.get("abstained") is True
+    if abstained:  # an abstention cites nothing (docs/response_structure.md); every page goes to the audit trail
+        citations, used = [], set()
     response = {
         "financebench_id": financebench_id,
         "question_type": meta.get("question_type"),
