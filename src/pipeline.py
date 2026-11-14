@@ -276,6 +276,8 @@ def to_response(financebench_id: str, meta: dict, retrieved: list[tuple[dict, fl
     steps = [str(s) for s in (reply.get("calculation_steps") or []) if str(s).strip()]
     answer = reply.get("answer")
     abstained = reply.get("abstained") is True
+    if not abstained and answer and not citations and error is None:
+        abstained = True  # an answer with no citation is unsupported, so it counts as an abstention
     if abstained:  # an abstention cites nothing (docs/response_structure.md); every page goes to the audit trail
         citations, used = [], set()
     response = {
