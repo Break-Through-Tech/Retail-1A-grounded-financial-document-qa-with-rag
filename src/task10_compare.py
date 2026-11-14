@@ -95,7 +95,7 @@ def build_retriever(kind, chunks, args):
     if kind == "dense":
         return dense, {"model": args.model}
 
-    from src.rerank import CrossEncoderScorer, RetrieveAndRerank
+    from src.retrieval.rerank import CrossEncoderScorer, RetrieveAndRerank
     if not (args.rerank_model and args.rerank_revision):
         raise SystemExit("rerank needs --rerank-model and --rerank-revision")
     scorer = CrossEncoderScorer.load(args.rerank_model, args.rerank_revision, device=args.device)
