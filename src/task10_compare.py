@@ -11,9 +11,13 @@ Metrics (page rule, same as src/evaluation/metrics.py):
 Usage:
   python -m src.task10_compare --chunks page --retriever bm25
   python -m src.task10_compare --all-bm25                       # 3 passage sizes, BM25
+  python -m src.task10_compare --chunks page --retriever hybrid --model ID --revision HASH
+                                                                # BM25 + dense fused, no reranker
   python -m src.task10_compare --chunks page --retriever dense  --model ID --revision HASH
   python -m src.task10_compare --chunks page --retriever rerank --model ID --revision HASH \
         --rerank-model ID --rerank-revision HASH   (rerank = BM25 + dense fused, then reranked)
+
+The company/year filter is applied to the full ranking before the top results are taken.
 
 Needs data/processed/chunks_*.jsonl (python src/chunk.py). Only dev questions are used.
 """
@@ -73,45 +77,86 @@ def load_gold():
     for line in DATASET.open():
         r = json.loads(line)
         gold[r["financebench_id"]] = [
-            {"doc_name": e["doc_name"], "evidence_page_num": e["evidence_page_num"]}
+            {"doc_name": e["doc_name"],
+                "evidence_page_num": e["evidence_page_num"]}
             for e in r["evidence"]
         ]
     return gold
 
 
+class Filtered:
+    """Wraps a retriever so it only returns chunks the company/year filter allows.
+
+    `keep` (a set of chunk_ids) is set per question before searching. The wrapped retriever
+    ranks every chunk and the disallowed ones are skipped, as in src/pipeline.py.
+    """
+
+    def __init__(self, inner, n_chunks):
+        self.inner = inner
+        self.n = n_chunks
+        self.keep = None
+
+    def retrieve(self, query, k):
+        hits = self.inner.retrieve(query, self.n)
+        if self.keep is not None:
+            hits = [h for h in hits if h.chunk_id in self.keep]
+        return hits[:k]
+
+
+class Hybrid:
+    """BM25 and dense results fused with reciprocal rank fusion (no reranker)."""
+
+    def __init__(self, parts, depth=100):
+        self.parts = parts
+        self.depth = depth
+
+    def retrieve(self, query, k):
+        from src.rerank import rrf_fuse
+        lists = [list(p.retrieve(query, self.depth)) for p in self.parts]
+        return rrf_fuse([l for l in lists if l])[:k]
+
+
 def build_retriever(kind, chunks, args):
+    """Return (retriever, info, filters). `filters` must get `.keep` set for each question."""
     docs = [(c["chunk_id"], c["text"]) for c in chunks]
+    n = len(docs)
     if kind == "bm25":
-        return BM25Index.build(docs), {"model": "none"}
+        f = Filtered(BM25Index.build(docs), n)
+        return f, {"model": "none"}, [f]
 
     from src.retrieval.dense import DenseRetriever
     from src.retrieval.embeddings import SentenceTransformerEncoder
 
     if not (args.model and args.revision):
-        raise SystemExit("dense and rerank need --model and --revision (a 40-character hash)")
+        raise SystemExit(
+            "dense, hybrid and rerank need --model and --revision (a 40-character hash)")
     encoder = SentenceTransformerEncoder.load(
         args.model, args.revision, device=args.device, query_prompt=args.query_prompt)
-    dense = DenseRetriever.build(docs, encoder)
+    dense = Filtered(DenseRetriever.build(docs, encoder), n)
     if kind == "dense":
-        return dense, {"model": args.model}
+        return dense, {"model": args.model}, [dense]
+
+    bm25 = Filtered(BM25Index.build(docs), n)
+    if kind == "hybrid":
+        return Hybrid([bm25, dense], depth=args.candidate_k), \
+            {"model": f"{args.model} + bm25 (RRF)"}, [bm25, dense]
 
     from src.rerank import CrossEncoderScorer, RetrieveAndRerank
     if not (args.rerank_model and args.rerank_revision):
         raise SystemExit("rerank needs --rerank-model and --rerank-revision")
-    scorer = CrossEncoderScorer.load(args.rerank_model, args.rerank_revision, device=args.device)
-    texts = dict(docs)
-    pipe = RetrieveAndRerank({"bm25": BM25Index.build(docs), "dense": dense}, texts, scorer,
+    scorer = CrossEncoderScorer.load(
+        args.rerank_model, args.rerank_revision, device=args.device)
+    pipe = RetrieveAndRerank({"bm25": bm25, "dense": dense}, dict(docs), scorer,
                              candidate_k=args.candidate_k)
-    return pipe, {"model": f"{args.model} + {args.rerank_model}"}
+    return pipe, {"model": f"{args.model} + {args.rerank_model}"}, [bm25, dense]
 
 
 def search(kind, retriever, question, k, keep_ids):
-    """Return chunk_ids, best first, limited to keep_ids."""
+    """Return chunk_ids, best first. The wrappers already apply the filter; this re-checks it."""
     if kind == "rerank":
-        # Ask for plenty, then keep only the chunks the company/year filter allows.
-        out = retriever.search(question, top_k=max(k * 20, 100))
+        out = retriever.search(question, top_k=k)
         return [r.chunk_id for r in out.results if r.chunk_id in keep_ids][:k]
-    hits = retriever.retrieve(question, max(k * 20, 200))
+    hits = retriever.retrieve(question, k)
     return [h.chunk_id for h in hits if h.chunk_id in keep_ids][:k]
 
 
@@ -123,14 +168,18 @@ def run_one(chunk_key, kind, args, number):
     gold = load_gold()
 
     t0 = time.time()
-    retriever, info = build_retriever(kind, chunks, args)
+    retriever, info, filters = build_retriever(kind, chunks, args)
     rankings = {}
     for q in queries:
-        keep = allowed(q.question, chunks) if args.filter == "on" else range(len(chunks))
+        keep = allowed(q.question, chunks) if args.filter == "on" else range(
+            len(chunks))
         keep_ids = {chunks[i]["chunk_id"] for i in keep}
+        for f in filters:
+            f.keep = keep_ids
         ids = search(kind, retriever, q.question, 10, keep_ids)
         rankings[q.financebench_id] = [
-            {"doc_name": by_id[i]["doc_name"], "evidence_page_num": by_id[i]["page_num"]}
+            {"doc_name": by_id[i]["doc_name"],
+                "evidence_page_num": by_id[i]["page_num"]}
             for i in ids
         ]
     elapsed = time.time() - t0
@@ -175,8 +224,10 @@ def next_run():
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--chunks", choices=list(CHUNK_FILES), default="page")
-    p.add_argument("--retriever", choices=["bm25", "dense", "rerank"], default="bm25")
-    p.add_argument("--all-bm25", action="store_true", help="run BM25 on all three passage sizes")
+    p.add_argument(
+        "--retriever", choices=["bm25", "dense", "hybrid", "rerank"], default="bm25")
+    p.add_argument("--all-bm25", action="store_true",
+                   help="run BM25 on all three passage sizes")
     p.add_argument("--filter", choices=["on", "off"], default="on")
     p.add_argument("--stage", default="A search only")
     p.add_argument("--who", default="Benita")
@@ -190,7 +241,8 @@ def main():
     p.add_argument("--device", default="cpu")
     args = p.parse_args()
 
-    plan = [(k, "bm25") for k in CHUNK_FILES] if args.all_bm25 else [(args.chunks, args.retriever)]
+    plan = [(k, "bm25") for k in CHUNK_FILES] if args.all_bm25 else [
+        (args.chunks, args.retriever)]
     for chunk_key, kind in plan:
         row = run_one(chunk_key, kind, args, next_run())
         append(row)
