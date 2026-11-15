@@ -28,6 +28,7 @@ import subprocess
 import time
 from datetime import date
 from pathlib import Path
+from typing import Any
 
 from src.data.split import load_rows
 from src.eval_retrieval import allowed
@@ -50,6 +51,12 @@ NUM_CTX = 8192
 MAX_REPLY_TOKENS = 1024      # longest reply the model may write
 RESERVED_TOKENS = 1500       # room kept for the instructions, the question and the reply
 MAX_ATTEMPTS = 3             # tries per question before recording an error and moving on
+
+# Dense search (Task 10). bge-base had the best Hit@5 on the 111 dev questions
+# (0.505 against 0.234 for BM25); see docs/task10_models.md and results/task10-comparison.csv.
+EMBED_MODEL = "BAAI/bge-base-en-v1.5"
+EMBED_REVISION = "a5beb1e3e68b9ab74eb54cfd186867f64f240e1a"   # pinned 40-character commit
+EMBED_QUERY_PROMPT = "Represent this sentence for searching relevant passages: "
 
 SYSTEM_PROMPT = """You answer questions about company financial filings.
 Use ONLY the numbered sources in the user's message. Never use outside knowledge.
@@ -98,16 +105,33 @@ def build_index(chunks: list[dict]) -> BM25Index:
     return BM25Index.build((c["chunk_id"], c["text"]) for c in chunks)
 
 
-def retrieve(question: str, index: BM25Index, chunks: list[dict],
-             by_id: dict[str, dict], k: int = TOP_K) -> list[tuple[dict, float]]:
-    """Top-k (chunk, BM25 score) pairs, searching only the company/year the question names.
+def build_dense_index(chunks: list[dict], model: str = EMBED_MODEL, revision: str = EMBED_REVISION,
+                      device: str = "cpu") -> Any:
+    """Build the team's dense index (src/retrieval/dense.py) over every chunk.
 
-    BM25 ranks every chunk, then chunks outside the filter are skipped. This matches
-    how src/eval_retrieval.py applies the same filter.
+    Needs the sentence-transformers and faiss packages. Encoding all page chunks takes
+    a few minutes on a GPU or Apple chip and much longer on a plain CPU.
+    """
+    from src.retrieval.dense import DenseRetriever
+    from src.retrieval.embeddings import SentenceTransformerEncoder
+
+    encoder = SentenceTransformerEncoder.load(model, revision, device=device,
+                                              query_prompt=EMBED_QUERY_PROMPT)
+    return DenseRetriever.build(((c["chunk_id"], c["text"]) for c in chunks), encoder)
+
+
+def retrieve(question: str, index: Any, chunks: list[dict],
+             by_id: dict[str, dict], k: int = TOP_K) -> list[tuple[dict, float]]:
+    """Top-k (chunk, score) pairs, searching only the company/year the question names.
+
+    ``index`` is any retriever with ``retrieve(query, k)`` returning items that have
+    ``chunk_id`` and ``score``: the BM25 index or the dense index. It ranks every chunk,
+    then chunks outside the filter are skipped. This matches how src/eval_retrieval.py
+    and src/task10_compare.py apply the same filter.
     """
     keep = allowed(question, chunks)
     allowed_ids = {c["chunk_id"] for c, ok in zip(chunks, keep) if ok}
-    ranked = index.retrieve(question, k=index.n_docs)
+    ranked = index.retrieve(question, k=len(chunks))
     top = [r for r in ranked if r.chunk_id in allowed_ids][:k]
     return [(by_id[r.chunk_id], r.score) for r in top]
 
@@ -304,7 +328,7 @@ def to_response(financebench_id: str, meta: dict, retrieved: list[tuple[dict, fl
 
 # ---------------------------------------------------------------- 5. one question, end to end
 
-def answer_question(financebench_id: str, question: str, meta: dict, index: BM25Index,
+def answer_question(financebench_id: str, question: str, meta: dict, index: Any,
                     chunks: list[dict], by_id: dict[str, dict], llm, k: int = TOP_K) -> dict:
     """Run one question through search, prompt, model and formatting."""
     start = time.perf_counter()
@@ -351,6 +375,12 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--llm", choices=["fake", "ollama"], default="fake")
     parser.add_argument("--model", default=DEFAULT_MODEL, help="Ollama model tag")
     parser.add_argument("--k", type=int, default=TOP_K, help="pages retrieved for the model")
+    parser.add_argument("--retriever", choices=["bm25", "dense"], default="bm25",
+                        help="how pages are found (dense = embeddings; slower to start)")
+    parser.add_argument("--embed-model", default=EMBED_MODEL, help="embedding model for --retriever dense")
+    parser.add_argument("--embed-revision", default=EMBED_REVISION,
+                        help="pinned 40-character revision of the embedding model")
+    parser.add_argument("--device", default="cpu", help="device for the embedding model: cpu, cuda or mps")
     parser.add_argument("--num-ctx", type=int, default=NUM_CTX,
                         help="model context window in tokens (8192 fits qwen3:8b on an 8 GB card)")
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT, help="results file for --all-dev")
@@ -384,7 +414,10 @@ def main(argv: list[str] | None = None) -> None:
     if args.id and meta[args.id]["doc_name"] not in have:
         parser.error(f"the filing for {args.id} ({meta[args.id]['doc_name']}) is not downloaded")
 
-    index = build_index(chunks)
+    if args.retriever == "dense":
+        index = build_dense_index(chunks, args.embed_model, args.embed_revision, args.device)
+    else:
+        index = build_index(chunks)
     llm = FakeLLM() if args.llm == "fake" else OllamaLLM(args.model, args.num_ctx)
 
     if args.id:
@@ -410,8 +443,10 @@ def main(argv: list[str] | None = None) -> None:
         "options": getattr(llm, "options", None),
         "top_k": args.k,
         "chunks": CHUNKS.name,
-        "retriever": "bm25 + company/year filter",
-        "bm25_config": config_record(),
+        "retriever": ("dense " + args.embed_model if args.retriever == "dense" else "bm25")
+                     + " + company/year filter",
+        "embed_revision": args.embed_revision if args.retriever == "dense" else None,
+        "bm25_config": config_record() if args.retriever == "bm25" else None,
         "questions": len(ids),
     }
     args.out.with_suffix(".meta.json").write_text(json.dumps(run_record, indent=2) + "\n", encoding="utf-8")
