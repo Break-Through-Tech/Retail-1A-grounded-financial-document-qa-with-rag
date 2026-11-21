@@ -65,6 +65,27 @@ def test_retrieve_searches_only_the_company_named():
     assert retrieved[0][0]["page_num"] == 10  # the capex page ranks first
 
 
+def test_retrieve_works_with_any_retriever_and_still_filters_by_company():
+    """The dense index plugs in the same way: anything with retrieve(query, k=...)."""
+    chunks = [
+        make_chunk("ACME_2022_10K", "Acme", 2022, 1, "alpha"),
+        make_chunk("BETA_2022_10K", "Beta", 2022, 1, "beta"),
+        make_chunk("ACME_2022_10K", "Acme", 2022, 2, "gamma"),
+    ]
+    by_id = {c["chunk_id"]: c for c in chunks}
+
+    class StubIndex:
+        def retrieve(self, query, k):
+            assert k == len(chunks)  # asked for the full ranking, filtered afterwards
+            order = [chunks[1], chunks[2], chunks[0]]  # a Beta page ranks first
+            return [SimpleNamespace(chunk_id=c["chunk_id"], score=1.0 - i / 10)
+                    for i, c in enumerate(order)]
+
+    got = retrieve("What did Acme report in 2022?", StubIndex(), chunks, by_id, k=2)
+    assert [c["page_num"] for c, _ in got] == [2, 1]
+    assert all(c["company"] == "Acme" for c, _ in got)
+
+
 def test_retrieve_respects_k():
     assert len(retrieve(QUESTION, INDEX, CHUNKS, BY_ID, k=1)) == 1
 
