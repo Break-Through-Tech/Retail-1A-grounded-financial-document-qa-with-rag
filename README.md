@@ -8,12 +8,12 @@ This repository implements a grounded question-answering system for public finan
 
 | Name | GitHub Handle | Repository contributions |
 |---|---|---|
-| Benita Benjamin | [@benitabenjamin-cmd](https://github.com/benitabenjamin-cmd) | Dense retrieval, reranking, and answer-model experiments |
+| Benita Benjamin | [@12b12](https://github.com/12b12) | Dense retrieval, reranking, and answer-model experiments |
 | Marceliott Encarnacion | [@marceliottencarnacion](https://github.com/marceliottencarnacion) | Data verification, pipeline construction, and tuning |
 | Kerwyn Jean | [@kjean230](https://github.com/kjean230) | Baseline computation, vector indexing, and training set creation |
-| Anjena Raja | [@anjenaraja](https://github.com/anjenaraja) | Repository coordination and evaluation infrastructure |
+| Anjena Raja | [@Anjena-Raja](https://github.com/Anjena-Raja) | Repository coordination and evaluation infrastructure |
 | Shruti Senthilram | [@shrutisenthilram](https://github.com/shrutisenthilram) | PDF parsing while maintaining document structure and format context |
-| Maanveer Singh | [@ms04](https://github.com/ms04) | Initial search experiments, chunking comparisons, and logging |
+| Maanveer Singh | [@mannyS04](https://github.com/mannyS04) | Initial search experiments, chunking comparisons, and logging |
 | Kanishka Yadav | [@kanishkay](https://github.com/kanishkay) | Retrieval metrics and search evaluation |
 
 
