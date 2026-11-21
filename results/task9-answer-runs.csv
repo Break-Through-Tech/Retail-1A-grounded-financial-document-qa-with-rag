@@ -1,0 +1,3 @@
+run,date,who,commit,split,questions,filings,model,chunking,k,retriever,prompt,answered,abstained,errors,gold_page_retrieved,gold_page_cited,quotes_on_page,correct_by_hand,partly_correct_by_hand,wrong_or_abstained_by_hand,note
+1,2026-11-13,Benita,0cd831e,dev,48,16,qwen3:8b,page,5,BM25 + company/year filter,original (Task #7),44,4,0,24,20,43/53,17,7,24,"Colab T4 GPU. Correct/partly/wrong judged by hand against the answer key."
+2,2026-11-13,Benita,50ee8c4,dev,48,16,qwen3:8b,page,5,BM25 + company/year filter,"answer-form prompt; no citations on abstentions",46,2,0,24,20,40/48,21,6,21,"Same model and settings as run 1. 3 earlier abstentions became answers (00222 00757 04481); 00757 has no citation."
