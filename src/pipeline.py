@@ -360,7 +360,7 @@ def git_commit() -> str:
         def git(*args):
             return subprocess.run(["git", *args], capture_output=True, text=True,
                                   check=True, cwd=ROOT).stdout.strip()
-        dirty = git("status", "--porcelain") != ""
+        dirty = git("status", "--porcelain", "--untracked-files=no") != ""
         return git("rev-parse", "--short", "HEAD") + ("+dirty" if dirty else "")
     except Exception:
         return "unknown"
