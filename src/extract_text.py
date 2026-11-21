@@ -15,10 +15,12 @@ PDF_DIR = ROOT / "data" / "pdfs"
 OUT = ROOT / "data" / "processed" / "pages.jsonl"
 
 
-def main():
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    with OUT.open("w") as f:
-        for pdf in sorted(PDF_DIR.glob("*.pdf")):
+def extract_pages(pdf_dir: Path = PDF_DIR, output: Path = OUT) -> int:
+    """Extract every PDF in ``pdf_dir`` to ``output`` without fixed-path state."""
+    output.parent.mkdir(parents=True, exist_ok=True)
+    page_count = 0
+    with output.open("w", encoding="utf-8") as f:
+        for pdf in sorted(pdf_dir.glob("*.pdf")):
             reader = PdfReader(pdf)
             for i, page in enumerate(reader.pages):
                 rec = {
@@ -28,6 +30,12 @@ def main():
                 }
                 f.write(json.dumps(rec) + "\n")
             print(f"{pdf.stem}: {len(reader.pages)} pages")
+            page_count += len(reader.pages)
+    return page_count
+
+
+def main():
+    extract_pages()
 
 
 if __name__ == "__main__":

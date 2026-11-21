@@ -73,10 +73,10 @@ def dev_filings():
             if r["financebench_id"] in dev}
 
 
-def load_pages():
+def load_pages(pages_path=PAGES):
     """Group cleaned pages by document, tagging each with its section."""
     docs = {}
-    for line in PAGES.open():
+    for line in pages_path.open():
         r = json.loads(line)
         docs.setdefault(r["doc_name"], []).append(r)
     for name, pages in docs.items():
