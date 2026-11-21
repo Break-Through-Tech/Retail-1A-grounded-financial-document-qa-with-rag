@@ -23,3 +23,21 @@ run,date,who,commit,split,questions,filings,chunking,size,overlap,header,filter,
 22,2026-10-10,ms04,205e4ae+dirty,dev,48,12,words,300,50,removed,on,tfidf,10,0.062,0.188,0.188,0.144,0.958,development questions only; frozen test IDs excluded
 23,2026-10-10,ms04,205e4ae+dirty,dev,48,12,words,600,100,removed,off,tfidf,10,0.021,0.167,0.188,0.087,1.0,development questions only; frozen test IDs excluded
 24,2026-10-10,ms04,205e4ae+dirty,dev,48,12,words,600,100,removed,on,tfidf,10,0.021,0.208,0.25,0.123,1.0,development questions only; frozen test IDs excluded
+25,2026-10-16,ms04,38f1954+dirty,dev,48,12,page,1 page,none,removed,off,bm25,10,0.188,0.333,0.354,0.243,1.0,task3 search test; development questions only
+26,2026-10-16,ms04,38f1954+dirty,dev,48,12,page,1 page,none,removed,on,bm25,10,0.229,0.5,0.562,0.322,1.0,task3 search test; development questions only
+27,2026-10-16,ms04,8b92d9c,dev,48,12,words,300,50,removed,off,bm25,10,0.125,0.333,0.271,0.212,0.958,bm25 chunking recheck; development questions only
+28,2026-10-16,ms04,8b92d9c,dev,48,12,words,300,50,removed,on,bm25,10,0.167,0.438,0.354,0.285,0.958,bm25 chunking recheck; development questions only
+29,2026-10-16,ms04,8b92d9c,dev,48,12,words,600,100,removed,off,bm25,10,0.188,0.354,0.375,0.241,1.0,bm25 chunking recheck; development questions only
+30,2026-10-16,ms04,8b92d9c,dev,48,12,words,600,100,removed,on,bm25,10,0.229,0.479,0.521,0.314,1.0,bm25 chunking recheck; development questions only
+31,2026-10-31,ms04,85ef7ff,dev,48,12,page,1 page,none,removed,off,tfidf,10,0.021,0.167,0.188,0.094,1.0,dev questions; dev-filings-only corpus
+32,2026-10-31,ms04,85ef7ff,dev,48,12,page,1 page,none,removed,on,tfidf,10,0.021,0.25,0.271,0.128,1.0,dev questions; dev-filings-only corpus
+33,2026-10-31,ms04,85ef7ff,dev,48,12,words,300,50,removed,off,tfidf,10,0.062,0.188,0.146,0.112,0.958,dev questions; dev-filings-only corpus
+34,2026-10-31,ms04,85ef7ff,dev,48,12,words,300,50,removed,on,tfidf,10,0.083,0.229,0.208,0.162,0.958,dev questions; dev-filings-only corpus
+35,2026-10-31,ms04,85ef7ff,dev,48,12,words,600,100,removed,off,tfidf,10,0.042,0.167,0.208,0.107,1.0,dev questions; dev-filings-only corpus
+36,2026-10-31,ms04,85ef7ff,dev,48,12,words,600,100,removed,on,tfidf,10,0.042,0.229,0.271,0.149,1.0,dev questions; dev-filings-only corpus
+37,2026-10-31,ms04,85ef7ff+dirty,dev,48,12,page,1 page,none,removed,off,bm25,10,0.188,0.354,0.396,0.251,1.0,task3 search test; dev questions; dev-filings-only corpus
+38,2026-10-31,ms04,85ef7ff+dirty,dev,48,12,page,1 page,none,removed,on,bm25,10,0.229,0.479,0.542,0.322,1.0,task3 search test; dev questions; dev-filings-only corpus
+39,2026-10-31,ms04,85ef7ff+dirty,dev,48,12,words,300,50,removed,off,bm25,10,0.125,0.354,0.292,0.218,0.958,bm25 chunking recheck; dev questions; dev-filings-only corpus
+40,2026-10-31,ms04,85ef7ff+dirty,dev,48,12,words,300,50,removed,on,bm25,10,0.167,0.438,0.354,0.286,0.958,bm25 chunking recheck; dev questions; dev-filings-only corpus
+41,2026-10-31,ms04,85ef7ff+dirty,dev,48,12,words,600,100,removed,off,bm25,10,0.188,0.354,0.375,0.25,1.0,bm25 chunking recheck; dev questions; dev-filings-only corpus
+42,2026-10-31,ms04,85ef7ff+dirty,dev,48,12,words,600,100,removed,on,bm25,10,0.229,0.479,0.521,0.316,1.0,bm25 chunking recheck; dev questions; dev-filings-only corpus
